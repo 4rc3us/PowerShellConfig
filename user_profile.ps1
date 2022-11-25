@@ -3,6 +3,7 @@
 #Import-Module oh-my-posh
 #Set-PoshPrompt avit
 #####oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\avit.omp.json" | Invoke-Expression
+Invoke-Expression (&starship init powershell)
 
 # Icons
 Import-Module -Name Terminal-Icons
@@ -29,7 +30,9 @@ Set-Alias tig 'C:\Program Files\Git\usr\bin\tig.exe'
 Set-Alias less 'C:\Program Files\Git\usr\bin\less.exe'
 Set-Alias x 'C:\Windows\explorer.exe .'
 Set-Alias lg lazygit
+Set-Alias lvim 'C:\Users\jdaniel\.local\bin\lvim.ps1'
 Set-Alias lv lvim
+Set-Alias .. cd..
 
 # Utilities
 function which ($command) {
@@ -46,11 +49,7 @@ function killU () {C:\Windows\system32\wsl.exe --terminate Ubuntu-20.04}
 function ssh-passwd () {
 	$empty = "The agent has no identities."
 	$answer = ssh-add -l
-
-	if ($answer -eq $empty)
-	{
-		ssh-add $HOME\.ssh\id_ed25519
-	}
+	if ($answer -eq $empty)	{ ssh-add $HOME\.ssh\id_ed25519 }
 }
 
 ssh-passwd
