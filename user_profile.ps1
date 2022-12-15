@@ -2,7 +2,7 @@
 #Import-Module posh-git
 #Import-Module oh-my-posh
 #Set-PoshPrompt avit
-#####oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\avit.omp.json" | Invoke-Expression
+#oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\avit.omp.json" | Invoke-Expression
 Invoke-Expression (&starship init powershell)
 
 # Icons
@@ -30,9 +30,7 @@ Set-Alias tig 'C:\Program Files\Git\usr\bin\tig.exe'
 Set-Alias less 'C:\Program Files\Git\usr\bin\less.exe'
 Set-Alias x 'C:\Windows\explorer.exe .'
 Set-Alias lg lazygit
-Set-Alias lvim 'C:\Users\jdaniel\.local\bin\lvim.ps1'
 Set-Alias lv lvim
-Set-Alias .. cd..
 
 # Utilities
 function which ($command) {
@@ -40,16 +38,26 @@ function which ($command) {
 		Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
 }
 
+function w () {cd ~/workspace/web/}
+function ws () {cd ~/workspace/}
+function vd () {python.exe 'C:\Users\Juan.arce\Miniconda3\Scripts\vd'}
+function appdata () {cd $env:LOCALAPPDATA}
+
 function bgn () {Start-Process -NoNewWindow -RedirectStandardOutput "NUL" @args}
 function bg () {Start-Process -NoNewWindow @args}
 
 function killP () {C:\Windows\system32\wsl.exe --terminate podman-machine-default}
 function killU () {C:\Windows\system32\wsl.exe --terminate Ubuntu-20.04}
+function syncd () {"$HOME\.emacs.d\bin\doom sync -e"}
 
 function ssh-passwd () {
 	$empty = "The agent has no identities."
 	$answer = ssh-add -l
-	if ($answer -eq $empty)	{ ssh-add $HOME\.ssh\id_ed25519 }
+
+	if ($answer -eq $empty)
+	{
+		ssh-add $HOME\.ssh\id_ed25519
+	}
 }
 
 ssh-passwd
