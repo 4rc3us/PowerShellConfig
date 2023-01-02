@@ -50,14 +50,13 @@ function killP () {C:\Windows\system32\wsl.exe --terminate podman-machine-defaul
 function killU () {C:\Windows\system32\wsl.exe --terminate Ubuntu-20.04}
 function syncd () {"$HOME\.emacs.d\bin\doom sync -e"}
 
+function pingt () {ping 8.8.8.8 -t}
+
 function ssh-passwd () {
 	$empty = "The agent has no identities."
 	$answer = ssh-add -l
 
-	if ($answer -eq $empty)
-	{
-		ssh-add $HOME\.ssh\id_ed25519
-	}
+	if ($answer -eq $empty) {sh-add $HOME\.ssh\id_ed25519}
 }
 
 ssh-passwd
