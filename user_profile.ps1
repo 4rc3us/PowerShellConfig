@@ -11,11 +11,13 @@ Import-Module -Name Terminal-Icons
 # PSReadLine
 Set-PSReadLineOption -EditMode Emacs
 Set-PSReadLineOption -BellStyle None
-Set-PSReadlineKeyHandler -Chord 'Ctrl+d' -Function DeleteChar
 Set-PSReadLineOption -PredictionSource History
 Remove-PSReadLineKeyHandler -Chord Alt+1
 Remove-PSReadLineKeyHandler -Chord Alt+2
 Remove-PSReadLineKeyHandler -Chord Alt+3
+Set-PSReadLineKeyHandler -Chord 'alt+l' -Function ForwardWord
+Set-PSReadLineKeyHandler -Chord 'alt+h' -Function BackwardWord
+Set-PSReadlineKeyHandler -Chord 'Ctrl+d' -Function DeleteChar
 
 # Fzf
 Import-Module PSFzf
@@ -52,6 +54,10 @@ function syncd () {"$HOME\.emacs.d\bin\doom sync -e"}
 
 function pingt () {ping 8.8.8.8 -t}
 
+function gffs () {git flow feature start @args}
+
+function gfff () {git flow feature finish @args}
+
 function ssh-passwd () {
 	$empty = "The agent has no identities."
 	$answer = ssh-add -l
@@ -60,3 +66,11 @@ function ssh-passwd () {
 }
 
 ssh-passwd
+
+# PowerShell parameter completion shim for the dotnet CLI
+Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
+     param($commandName, $wordToComplete, $cursorPosition)
+         dotnet complete --position $cursorPosition "$wordToComplete" | ForEach-Object {
+            [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+         }
+ }
