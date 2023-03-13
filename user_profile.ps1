@@ -33,44 +33,53 @@ Set-Alias less 'C:\Program Files\Git\usr\bin\less.exe'
 Set-Alias x 'C:\Windows\explorer.exe .'
 Set-Alias lg lazygit
 Set-Alias lv lvim
+Set-Alias python python3
 
 # Utilities
 function which ($command) {
 	Get-Command -Name $command -ErrorAction SilentlyContinue |
-		Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
+	Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
 }
 
-function w () {cd ~/workspace/web/}
-function ws () {cd ~/workspace/}
-function vd () {python.exe 'C:\Users\Juan.arce\Miniconda3\Scripts\vd'}
-function appdata () {cd $env:LOCALAPPDATA}
+function w () { Set-Location ~/workspace/web/ }
+function ws () { Set-Location ~/workspace/ }
+function vd () { python.exe 'C:\Users\Juan.arce\Miniconda3\Scripts\vd' }
+function appdata () { Set-Location $env:LOCALAPPDATA }
 
-function bgn () {Start-Process -NoNewWindow -RedirectStandardOutput "NUL" @args}
-function bg () {Start-Process -NoNewWindow @args}
+function bgn () { Start-Process -NoNewWindow -RedirectStandardOutput "NUL" @args }
+function bg () { Start-Process -NoNewWindow @args }
 
-function killP () {C:\Windows\system32\wsl.exe --terminate podman-machine-default}
-function killU () {C:\Windows\system32\wsl.exe --terminate Ubuntu-20.04}
-function syncd () {"$HOME\.emacs.d\bin\doom sync -e"}
+function killP () { C:\Windows\system32\wsl.exe --terminate podman-machine-default }
+function killU () { C:\Windows\system32\wsl.exe --terminate Ubuntu-20.04 }
+function syncd () { "$HOME\.emacs.d\bin\doom sync -e" }
 
-function pingt () {ping 8.8.8.8 -t}
+function purge {
+	param([string]$path = $pwd)
 
-function gffs () {git flow feature start @args}
+	$lineasUnicas = Get-Content $path | Select-Object -Unique
 
-function gfff () {git flow feature finish @args}
+	$lineasUnicas | Out-File -FilePath $path
+}
+
+function pingt () { ping 8.8.8.8 -t }
+
+function gffs () { git flow feature start @args }
+
+function gfff () { git flow feature finish @args }
 
 function ssh-passwd () {
 	$empty = "The agent has no identities."
 	$answer = ssh-add -l
 
-	if ($answer -eq $empty) {sh-add $HOME\.ssh\id_ed25519}
+	if ($answer -eq $empty) { sh-add $HOME\.ssh\id_ed25519 }
 }
 
 ssh-passwd
 
 # PowerShell parameter completion shim for the dotnet CLI
 Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
-     param($commandName, $wordToComplete, $cursorPosition)
-         dotnet complete --position $cursorPosition "$wordToComplete" | ForEach-Object {
-            [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
-         }
- }
+	param($commandName, $wordToComplete, $cursorPosition)
+	dotnet complete --position $cursorPosition "$wordToComplete" | ForEach-Object {
+		[System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+	}
+}
