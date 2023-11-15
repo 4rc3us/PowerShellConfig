@@ -13,6 +13,7 @@ Set-PSReadLineOption -EditMode vi
 Set-PSReadLineOption -EditMode emacs
 Set-PSReadLineOption -BellStyle None
 Set-PSReadLineOption -PredictionSource History
+Set-PSReadLineOption -PredictionViewStyle ListView
 Remove-PSReadLineKeyHandler -Chord Alt+1
 Remove-PSReadLineKeyHandler -Chord Alt+2
 Remove-PSReadLineKeyHandler -Chord Alt+3
