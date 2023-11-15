@@ -40,18 +40,17 @@ Set-Alias -Name lvim -Value "$env:USERPROFILE\.local\bin\lvim.ps1"
 Set-Alias -Name .. -Value "cd.."
 
 function v () { nvim @args }
-function bat () { bat --theme base16 @args }
 function pipx () { python3 -m pipx @args }
 function erdf () { erd -s name -I -y inverted --hidden --no-git @args }
 function l () { lsd -1 @args }
 function ll () { lsd -1 -a @args }
 
 function touch (
-	[Parameter(Mandatory = $false, Position = 0)]
-	[string]$path = $pwd,
-
-	[Parameter(Mandatory = $true, Position = 1)]
+	[Parameter(Mandatory = $true, Position = 0)]
 	[string]$name,
+
+	[Parameter(Mandatory = $false, Position = 1)]
+	[string]$path = $pwd,
 
 	[Parameter(Mandatory = $false, Position = 2)]
 	[string]$value
