@@ -80,6 +80,20 @@ function purge {
 	$lineasUnicas | Out-File -FilePath $path
 }
 
+function purgeHistory {
+# Obtén el historial de comandos
+ $historial = Get-History
+
+ # Elimina los duplicados
+ $historialUnico = $historial | Sort-Object -Property CommandLine -Unique
+
+ # Limpia el historial actual
+ Clear-History
+
+ # Agrega los comandos únicos de nuevo al historial
+ foreach ($comando in $historialUnico) { Add-History -InputObject $comando }
+}
+
 function erds () {
 	erd  -s name -C none -y flat
 }
