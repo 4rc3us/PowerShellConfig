@@ -9,7 +9,6 @@ Invoke-Expression (&starship init powershell)
 # Import-Module -Name Terminal-Icons
 
 # PSReadLine
-Set-PSReadLineOption -EditMode vi
 Set-PSReadLineOption -EditMode emacs
 Set-PSReadLineOption -BellStyle None
 Set-PSReadLineOption -PredictionSource History
@@ -27,7 +26,7 @@ Set-PSReadlineKeyHandler -Chord 'Ctrl+a' -Function BeginningOfLine
 
 # Fzf
 Import-Module PSFzf
-Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
+Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r' -PSReadlineChordSetLocation 'Alt+c'
 
 # Alias
 Set-Alias g git
