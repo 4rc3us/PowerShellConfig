@@ -38,6 +38,7 @@ Set-Alias lv lvim
 Set-Alias python3 python
 Set-Alias -Name lvim -Value "$env:USERPROFILE\.local\bin\lvim.ps1"
 Set-Alias -Name .. -Value "cd.."
+Set-Alias -Name wl-copy -Value clip
 
 function v () { nvim @args }
 function pipx () { python3 -m pipx @args }
@@ -113,8 +114,12 @@ function gfff () { git flow feature finish @args }
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
-function kubectl () {
-	minikube kubectl -- $args
+#function kubectl () {
+#	minikube kubectl -- $args
+#}
+
+function git-pushall {
+    git remote | ForEach-Object {git push $_ --all}
 }
 
 # function TEST() {
