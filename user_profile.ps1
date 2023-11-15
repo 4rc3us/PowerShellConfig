@@ -10,6 +10,7 @@ Invoke-Expression (&starship init powershell)
 
 # PSReadLine
 Set-PSReadLineOption -EditMode vi
+Set-PSReadLineOption -EditMode emacs
 Set-PSReadLineOption -BellStyle None
 Set-PSReadLineOption -PredictionSource History
 Remove-PSReadLineKeyHandler -Chord Alt+1
