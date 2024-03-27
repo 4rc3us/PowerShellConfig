@@ -1,5 +1,5 @@
 # Prompt
-#Import-Module posh-git
+Import-Module posh-git
 #Import-Module oh-my-posh
 #Set-PoshPrompt avit
 #oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\avit.omp.json" | Invoke-Expression
@@ -12,10 +12,12 @@ Invoke-Expression (&starship init powershell)
 Set-PSReadLineOption -EditMode emacs
 Set-PSReadLineOption -BellStyle None
 Set-PSReadLineOption -PredictionSource History
-Set-PSReadLineOption -PredictionViewStyle ListView
+Set-PSReadLineOption -PredictionViewStyle InlineView
+Set-PSReadLineOption -HistoryNoDuplicates
 Remove-PSReadLineKeyHandler -Chord Alt+1
 Remove-PSReadLineKeyHandler -Chord Alt+2
 Remove-PSReadLineKeyHandler -Chord Alt+3
+Remove-PSReadLineKeyHandler -Chord Ctrl+v
 Set-PSReadLineKeyHandler -Chord 'alt+l' -Function ForwardWord
 Set-PSReadLineKeyHandler -Chord 'alt+h' -Function BackwardWord
 Set-PSReadlineKeyHandler -Chord 'Ctrl+d' -Function DeleteChar
@@ -28,6 +30,9 @@ Set-PSReadlineKeyHandler -Chord 'Ctrl+a' -Function BeginningOfLine
 Import-Module PSFzf
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r' -PSReadlineChordSetLocation 'Alt+c'
 
+# Docker Module
+Import-Module DockerCompletion
+
 # Alias
 Set-Alias g git
 Set-Alias grep findstr
@@ -39,71 +44,64 @@ Set-Alias python3 python
 Set-Alias -Name lvim -Value "$env:USERPROFILE\.local\bin\lvim.ps1"
 Set-Alias -Name .. -Value "cd.."
 Set-Alias -Name wl-copy -Value clip
+#Set-Alias -Name npm -Value pnpm
 
-function v () { nvim @args }
-function pipx () { python3 -m pipx @args }
-function erdf () { erd -s name -I -y inverted --hidden --no-git @args }
-function l () { lsd -1 @args }
-function ll () { lsd -1 -a @args }
-
-function touch (
-	[Parameter(Mandatory = $true, Position = 0)]
-	[string]$name,
-
-	[Parameter(Mandatory = $false, Position = 1)]
-	[string]$path = $pwd,
-
-	[Parameter(Mandatory = $false, Position = 2)]
-	[string]$value
-
-) {
-	New-Item -Path $path -ItemType File -Name $name -Value $value
+function v ()
+{ nvim @args
+}
+function pipx ()
+{ python3 -m pipx @args
+}
+function erdf ()
+{ erd -s name -I -y inverted --hidden --no-git @args
+}
+function l ()
+{eza --icons=always --no-quotes --classify=always -G -a @args
+}
+function ll ()
+{eza --icons=always --no-quotes --classify=always -G -a -l @args
 }
 
 # Utilities
-function which ($command) {
+function which ($command)
+{
 	Get-Command -Name $command -ErrorAction SilentlyContinue |
-	Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
+		Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
 }
 
-function ws () { Set-Location ~/workspace/ }
-function vd () { python.exe 'C:\Users\Juan.arce\Miniconda3\Scripts\vd' }
-function bgn () { Start-Process -NoNewWindow -RedirectStandardOutput "NUL" @args }
-function bg () { Start-Process -NoNewWindow @args }
-
-function killF () { C:\Windows\system32\wsl.exe --terminate fedoraremix }
-
-function purge {
-	param([string]$path = $pwd)
-
-	$lineasUnicas = Get-Content $path | Select-Object -Unique
-
-	$lineasUnicas | Out-File -FilePath $path
+function ws ()
+{ Set-Location ~/workspace/
+}
+function vd ()
+{ python.exe 'C:\Users\Juan.arce\Miniconda3\Scripts\vd'
+}
+function bgn ()
+{ Start-Process -NoNewWindow -RedirectStandardOutput "NUL" @args
+}
+function bg ()
+{ Start-Process -NoNewWindow @args
 }
 
-function purgeHistory {
-# Obtén el historial de comandos
- $historial = Get-History
-
- # Elimina los duplicados
- $historialUnico = $historial | Sort-Object -Property CommandLine -Unique
-
- # Limpia el historial actual
- Clear-History
-
- # Agrega los comandos únicos de nuevo al historial
- foreach ($comando in $historialUnico) { Add-History -InputObject $comando }
+function killF ()
+{ C:\Windows\system32\wsl.exe --terminate fedoraremix
 }
 
-function erds () {
+function erds ()
+{
 	erd  -s name -C none -y flat
 }
 
-function pingt () { ping 8.8.8.8 -t }
+function pingt ()
+{ ping 8.8.8.8 -t
+}
 
-function gffs () { git flow feature start @args }
+function gffs ()
+{ git flow feature start @args
+}
 
-function gfff () { git flow feature finish @args }
+function gfff ()
+{ git flow feature finish @args
+}
 
 <# function ssh-passwd () {
 	$empty = "The agent has no identities."
@@ -114,12 +112,14 @@ function gfff () { git flow feature finish @args }
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
-#function kubectl () {
-#	minikube kubectl -- $args
-#}
+function mkubectl ()
+{
+	minikube kubectl -- $args
+}
 
-function git-pushall {
-    git remote | ForEach-Object {git push $_ --all}
+function git-pushall
+{
+	git remote | ForEach-Object {git push $_ --all}
 }
 
 # function TEST() {
@@ -141,3 +141,10 @@ Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
 		[System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
 	}
 }
+
+#Setup erd completions
+. "$env:USERPROFILE\Documents\PowerShell\erd.ps1"
+
+#SETUP JAVA
+$env:JAVA_HOME = "$env:USERPROFILE\.sdkman\candidates\java\current"
+$env:PATH += ";$env:JAVA_HOME\bin"
