@@ -1,12 +1,8 @@
 # Prompt
-Import-Module posh-git
-#Import-Module oh-my-posh
-#Set-PoshPrompt avit
-#oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\avit.omp.json" | Invoke-Expression
 Invoke-Expression (&starship init powershell)
 
-# Icons
-# Import-Module -Name Terminal-Icons
+# Zoxide
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 # PSReadLine
 Set-PSReadLineOption -EditMode emacs
@@ -20,7 +16,7 @@ Remove-PSReadLineKeyHandler -Chord Alt+3
 Remove-PSReadLineKeyHandler -Chord Ctrl+v
 Set-PSReadLineKeyHandler -Chord 'alt+l' -Function ForwardWord
 Set-PSReadLineKeyHandler -Chord 'alt+h' -Function BackwardWord
-Set-PSReadlineKeyHandler -Chord 'Ctrl+d' -Function DeleteChar
+Set-PSReadlineKeyHandler -Chord 'Ctrl+x' -Function DeleteChar
 Set-PSReadlineKeyHandler -Chord 'Ctrl+u' -Function DeleteLine
 Set-PSReadlineKeyHandler -Chord 'Ctrl+w' -Function DeleteWord
 Set-PSReadlineKeyHandler -Chord 'Ctrl+e' -Function EndOfLine
@@ -33,18 +29,21 @@ Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory
 # Docker Module
 Import-Module DockerCompletion
 
+# Git Module
+Import-Module posh-git
+
 # Alias
+Remove-Alias -Name ls
 Set-Alias g git
 Set-Alias grep findstr
 Set-Alias x 'C:\Windows\explorer.exe'
 Set-Alias lg lazygit
 Set-Alias ld lazydocker
-Set-Alias lv lvim
 Set-Alias python3 python
-Set-Alias -Name lvim -Value "$env:USERPROFILE\.local\bin\lvim.ps1"
 Set-Alias -Name .. -Value "cd.."
 Set-Alias -Name wl-copy -Value clip
-#Set-Alias -Name npm -Value pnpm
+Set-Alias -Name npm -Value pnpm
+Set-Alias -Name ls -Value eza
 
 function v ()
 { nvim @args
@@ -56,68 +55,42 @@ function erdf ()
 { erd -s name -I -y inverted --hidden --no-git @args
 }
 function l ()
-{eza --icons=always --no-quotes --classify=always -G -a @args
+{ eza --icons=always --no-quotes --classify=always -G -a @args
 }
 function ll ()
-{eza --icons=always --no-quotes --classify=always -G -a -l @args
+{ eza --icons=always --no-quotes --classify=always -G -a -l @args
 }
 
-# Utilities
 function which ($command)
-{
-	Get-Command -Name $command -ErrorAction SilentlyContinue |
-		Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
+{ Get-Command -Name $command -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
 }
 
-function ws ()
-{ Set-Location ~/workspace/
-}
 function vd ()
-{ python.exe 'C:\Users\Juan.arce\Miniconda3\Scripts\vd'
+{ python.exe '$USERPROFILE\Miniconda3\Scripts\vd'
 }
+
 function bgn ()
 { Start-Process -NoNewWindow -RedirectStandardOutput "NUL" @args
 }
+
 function bg ()
 { Start-Process -NoNewWindow @args
 }
 
-function killF ()
-{ C:\Windows\system32\wsl.exe --terminate fedoraremix
-}
-
 function erds ()
-{
-	erd  -s name -C none -y flat
+{ erd  -s name -C none -y flat
 }
 
 function pingt ()
 { ping 8.8.8.8 -t
 }
 
-function gffs ()
-{ git flow feature start @args
-}
-
-function gfff ()
-{ git flow feature finish @args
-}
-
-<# function ssh-passwd () {
-	$empty = "The agent has no identities."
-	$answer = ssh-add -l
-
-	if ($answer -eq $empty) { sh-add $HOME\.ssh\id_ed25519 }
-} #>
-
-Invoke-Expression (& { (zoxide init powershell | Out-String) })
-
 function mkubectl ()
 {
 	minikube kubectl -- $args
 }
 
-function git-pushall
+function pushall
 {
 	git remote | ForEach-Object {git push $_ --all}
 }
@@ -134,6 +107,10 @@ function git-pushall
 # 	}
 # }
 
+							###############
+							# Completions #
+							###############
+
 # PowerShell parameter completion shim for the dotnet CLI
 Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
 	param($commandName, $wordToComplete, $cursorPosition)
@@ -143,8 +120,8 @@ Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
 }
 
 #Setup erd completions
-. "$env:USERPROFILE\Documents\PowerShell\erd.ps1"
+#. "$env:USERPROFILE\Documents\PowerShell\erd.ps1"
 
 #SETUP JAVA
-$env:JAVA_HOME = "$env:USERPROFILE\.sdkman\candidates\java\current"
-$env:PATH += ";$env:JAVA_HOME\bin"
+#$env:JAVA_HOME = "$env:USERPROFILE\.sdkman\candidates\java\current"
+#$env:PATH += ";$env:JAVA_HOME\bin"
