@@ -4,6 +4,9 @@ Invoke-Expression (&starship init powershell)
 # Zoxide
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
+# Github Module
+Import-Module PSGitHub
+
 # PSReadLine
 Set-PSReadLineOption -EditMode emacs
 Set-PSReadLineOption -BellStyle None
